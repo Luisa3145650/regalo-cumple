@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Un regalo muy especial!</title>
+    <!-- Tailwind CSS para los estilos generales y diseño responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            /* Fondo gris/azulado con puntitos oscuros */
+            background-color: #cbd5e1;
+            background-image: radial-gradient(#94a3b8 2px, transparent 2px);
+            background-size: 30px 30px;
+            overflow-x: hidden;
+        }
+
+        .font-handwriting {
+            font-family: 'Caveat', cursive;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* --- Estilos del SOBRE AZUL --- */
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .envelope-wrapper:hover {
+            transform: scale(1.02);
+        }
+
+        .env-back {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #1e40af; /* Azul oscuro */
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(30, 64, 175, 0.3);
+            z-index: 1;
+        }
+
+        .env-paper {
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            background: #ffffff;
+            border-radius: 8px;
+            transition: transform 0.6s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .env-front {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 4;
+            pointer-events: none;
+        }
+        
+        .env-front-left {
+            position: absolute;
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid transparent;
+            border-left: 160px solid #3b82f6; /* Azul medio */
+            left: 0; top: 0;
+            border-bottom-left-radius: 10px;
+        }
+        .env-front-right {
+            position: absolute;
+            border-top: 110px solid transparent;
+            border-bottom: 110px solid transparent;
+            border-right: 160px solid #60a5fa; /* Azul claro */
+            right: 0; top: 0;
+            border-bottom-right-radius: 10px;
+        }
+        .env-front-bottom {
+            position: absolute;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 120px solid #2563eb; /* Azul rey */
+            bottom: 0; left: 0;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .env-flap {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 130px solid #93c5fd; /* Celeste */
+            transform-origin: top;
+            transition: transform 0.5s ease-in-out, z-index 0s 0.5s;
+            z-index: 5;
+        }
+
+        /* --- CLASE 'OPEN' --- */
+        .envelope-wrapper.open .env-flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+            transition: transform 0.5s ease-in-out, z-index 0s 0s;
+        }
+        .envelope-wrapper.open .env-paper {
+            transform: translateY(-90px);
+            z-index: 3;
+            cursor: pointer;
+        }
+        .envelope-wrapper.open .env-paper:hover {
+            transform: translateY(-100px);
+        }
+
+        /* --- Estilo Polaroid --- */
+        .polaroid {
+            background: white;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+            position: relative;
+        }
+
+        #modal-letter {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center text-gray-700">
+
+    <!-- PANTALLA 1: EL SOBRE -->
+    <main id="main-screen" class="flex-1 flex flex-col items-center justify-center w-full px-4 py-10 transition-opacity duration-500">
+        
+        <h1 class="text-4xl md:text-5xl font-extrabold text-blue-600 text-center mb-6 drop-shadow-md">
+            ¡Hola, tienes un correo! 💌
+        </h1>
+
+        <img src="conejo.jpg" alt="Conejito Cartero" class="w-64 h-64 object-cover rounded-full shadow-lg border-4 border-white mb-10 animate-float" onerror="this.src='https://placehold.co/256x256/bfdbfe/ffffff?text=Conejito+Cartero'">
+
+        <p class="text-lg text-blue-800 font-semibold mb-6 animate-pulse text-center">
+            Toca el sobre para abrirlo 👇
+        </p>
+
+        <div class="envelope-wrapper" id="envelope">
+            <div class="env-back"></div>
+            
+            <div class="env-paper" id="paper">
+                <span class="text-4xl mb-2">🎁</span>
+                <p id="paper-text" class="font-handwriting text-2xl text-blue-600 font-bold text-center px-2">
+                    Para alguien<br>muy especial
+                </p>
+            </div>
+            
+            <div class="env-front">
+                <div class="env-front-left"></div>
+                <div class="env-front-right"></div>
+                <div class="env-front-bottom"></div>
+            </div>
+            
+            <div class="env-flap"></div>
+        </div>
+    </main>
+
+    <!-- PANTALLA 2: LA CARTA (MODAL) -->
+    <div id="modal-letter" class="fixed inset-0 bg-white/90 backdrop-blur-sm z-50 flex flex-col opacity-0 pointer-events-none overflow-y-auto">
+        
+        <div class="max-w-2xl w-full mx-auto bg-slate-50 min-h-screen shadow-2xl relative">
+            
+            <button id="btn-close" class="absolute top-4 right-4 bg-blue-200 hover:bg-blue-300 text-blue-800 rounded-full w-10 h-10 flex items-center justify-center font-bold text-xl transition-colors z-20">
+                ×
+            </button>
+
+            <div class="w-full bg-blue-100 p-8 flex justify-center border-b-4 border-blue-200">
+                <img src="pastel.jpg" alt="Conejito Cumpleaños" class="w-full max-w-sm rounded-2xl shadow-md border-4 border-white transform -rotate-2" onerror="this.src='https://placehold.co/384x384/bfdbfe/ffffff?text=Conejito+Cumpleaños'">
+            </div>
+
+            <div class="p-8 md:p-12">
+                <h2 class="font-handwriting text-5xl md:text-6xl text-blue-600 text-center mb-8 transform -rotate-1">
+                    ¡Feliz Cumpleaños! 🎉
+                </h2>
+
+                <div class="text-lg md:text-xl leading-relaxed text-gray-700 space-y-6 text-center font-medium">
+                    <p>
+                        Espero estés muy bien. Sabes es un día especial para ti ya que se esta volviendo ancianito jejeje, solo te agradezco por estar presente en mi vida a un que por decisiones ya es mas complejo.
+                    </p>
+                    <p>
+                        Pero mi amor por ti es grande y te agradezco por hacerme conocer aquel sentimiento, que la virgen lo acompañe en este nuevo camino y puedas lograr todo lo que sueñas, eres una persona muy bonita tal vez si me falto un poco más de demostrarte mi cariño pero ten encuenta que hize mi mejor esfuerzo y siempre serás importante.
+                    </p>
+                    <p>
+                        Bueno mas que ello sabes que hay cosas que no quieras hacer se va a presentar la oportunidad y no te niegues, eres muy joven y no piense en muerte, viva y disfruta cada etapa de su vida.
+                    </p>
+                    <p class="font-handwriting text-4xl text-blue-500 pt-4 font-bold">
+                        feliz cumpleaños sapitaa💙......
+                    </p>
+                </div>
+
+                <div class="mt-16">
+                    <h3 class="font-handwriting text-4xl text-center text-gray-800 mb-10">
+                        Nuestros mejores recuerdos 📸
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 px-4 pb-12">
+                        
+                        <div class="polaroid transform -rotate-3">
+                            <img src="pinta.jpeg" alt="Recuerdo 1" class="w-full aspect-square object-cover">
+                            <p class="font-handwriting text-2xl text-center mt-3 text-gray-600">Ese día genial...</p>
+                        </div>
+
+                        <div class="polaroid transform rotate-2">
+                            <img src="risa.jpeg" alt="Recuerdo 2" class="w-full aspect-square object-cover">
+                            <p class="font-handwriting text-2xl text-center mt-3 text-gray-600">¡Muchas risas!</p>
+                        </div>
+
+                        <div class="polaroid transform -rotate-1 sm:translate-x-1/2 sm:col-span-2 sm:w-1/2 mx-auto mt-4">
+                            <img src="gorro2.jpeg" alt="Recuerdo 3" class="w-full aspect-[4/3] object-cover">
+                            <p class="font-handwriting text-2xl text-center mt-3 text-gray-600">Recuerdos</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA DE JAVASCRIPT -->
+    <script>
+        const envelope = document.getElementById('envelope');
+        const paper = document.getElementById('paper');
+        const paperText = document.getElementById('paper-text');
+        const modal = document.getElementById('modal-letter');
+        const btnClose = document.getElementById('btn-close');
+        const mainScreen = document.getElementById('main-screen');
+
+        let isEnvelopeOpen = false;
+
+        envelope.addEventListener('click', () => {
+            if (!isEnvelopeOpen) {
+                envelope.classList.add('open');
+                isEnvelopeOpen = true;
+                
+                setTimeout(() => {
+                    paperText.innerHTML = "¡Haz clic<br>para leer! 💙";
+                    paperText.classList.add('animate-pulse');
+                    
+                    paper.addEventListener('click', openLetterFullScreen);
+                }, 600); 
+            }
+        });
+
+        function openLetterFullScreen(event) {
+            event.stopPropagation();
+            
+            modal.classList.remove('pointer-events-none');
+            modal.style.opacity = '1';
+            mainScreen.style.opacity = '0.3';
+            modal.scrollTo(0,0);
+        }
+
+        btnClose.addEventListener('click', () => {
+            modal.classList.add('pointer-events-none');
+            modal.style.opacity = '0';
+            mainScreen.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
